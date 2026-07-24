@@ -5,6 +5,7 @@ const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
 const clearButton = document.querySelector(".clear");
 const decimalButton = document.querySelector(".decimal");
+const backspaceButton = document.querySelector(".backspace");
 
 let state = {
   currentValue: "",
@@ -116,6 +117,7 @@ clearButton.addEventListener("click", function () {
     previousValue: null,
     operator: null,
     justCalculated: false,
+    waitingForNewValue: false,
   };
   updateDisplay();
 });
@@ -142,6 +144,18 @@ decimalButton.addEventListener("click", function () {
   updateDisplay();
 });
 
+backspaceButton.addEventListener("click", function () {
+  if (state.justCalculated || state.waitingForNewValue) {
+    return;
+  }
+
+  state = {
+    ...state,
+    currentValue: state.currentValue.slice(0, -1),
+  };
+  updateDisplay();
+});
+
 document.addEventListener("keydown", function (event) {
   const key = event.key;
 
@@ -161,7 +175,9 @@ document.addEventListener("keydown", function (event) {
     if (button) button.click();
   } else if (key === "Enter" || key === "=") {
     equalsButton.click();
-  } else if (key === "Escape" || key === "Backspace") {
+  } else if (key === "Escape") {
     clearButton.click();
+  } else if (key === "Backspace") {
+    backspaceButton.click();
   }
 });

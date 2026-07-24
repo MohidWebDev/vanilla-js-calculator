@@ -92,3 +92,11 @@ body {
 .decimal {
   background-color: #3a3a3a;
 }
+
+.backspace {
+  background-color: #5a5a5a;
+}
+
+.backspace:hover {
+  background-color: #6a6a6a;
+}
