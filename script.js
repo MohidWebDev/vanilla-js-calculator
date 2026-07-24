@@ -4,6 +4,7 @@ const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
 const clearButton = document.querySelector(".clear");
+const decimalButton = document.querySelector(".decimal");
 
 let state = {
   currentValue: "",
@@ -32,8 +33,18 @@ function updateDisplay() {
 
 function calculate() {
   const operation = operations[state.operator];
+
+  if (!operation) {
+    return 0;
+  }
+
   const prev = Number(state.previousValue);
   const curr = Number(state.currentValue);
+
+  if (state.operator === "/" && curr === 0) {
+    return "Error";
+  }
+
   return operation(prev, curr);
 }
 
@@ -44,6 +55,11 @@ numberButtons.forEach(function (button) {
         ...state,
         currentValue: this.textContent,
         justCalculated: false,
+      };
+    } else if (state.currentValue === "0") {
+      state = {
+        ...state,
+        currentValue: this.textContent,
       };
     } else {
       state = { ...state, currentValue: state.currentValue + this.textContent };
@@ -93,5 +109,21 @@ clearButton.addEventListener("click", function () {
     operator: null,
     justCalculated: false,
   };
+  updateDisplay();
+});
+
+decimalButton.addEventListener("click", function () {
+  if (state.justCalculated) {
+    state = {
+      ...state,
+      currentValue: "0.",
+      justCalculated: false,
+    };
+  } else if (!state.currentValue.includes(".")) {
+    state = {
+      ...state,
+      currentValue: state.currentValue + ".",
+    };
+  }
   updateDisplay();
 });
