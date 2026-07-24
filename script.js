@@ -22,6 +22,8 @@ const operatorMap = {
   "×": "*",
 };
 
+const MAX_DIGITS = 16;
+
 const operations = {
   "+": (a, b) => a + b,
   "-": (a, b) => a - b,
@@ -30,7 +32,14 @@ const operations = {
 };
 
 function updateDisplay() {
-  display.textContent = state.currentValue;
+  let displayValue = String(state.currentValue);
+
+  if (displayValue.replace("-", "").replace(".", "").length > MAX_DIGITS) {
+    const num = Number(displayValue);
+    displayValue = num.toExponential(9);
+  }
+
+  display.textContent = displayValue;
 }
 
 function calculate() {
@@ -47,7 +56,8 @@ function calculate() {
     return "Error";
   }
 
-  return operation(prev, curr);
+  const result = operation(prev, curr);
+  return result;
 }
 
 numberButtons.forEach(function (button) {
@@ -69,6 +79,10 @@ numberButtons.forEach(function (button) {
         ...state,
         currentValue: this.textContent,
       };
+    } else if (
+      state.currentValue.replace("-", "").replace(".", "").length >= MAX_DIGITS
+    ) {
+      return;
     } else {
       state = { ...state, currentValue: state.currentValue + this.textContent };
     }
