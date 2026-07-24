@@ -11,6 +11,7 @@ let state = {
   previousValue: null,
   operator: null,
   justCalculated: false,
+  waitingForNewValue: false,
 };
 
 const operatorMap = {
@@ -56,6 +57,12 @@ numberButtons.forEach(function (button) {
         currentValue: this.textContent,
         justCalculated: false,
       };
+    } else if (state.waitingForNewValue) {
+      state = {
+        ...state,
+        currentValue: this.textContent,
+        waitingForNewValue: false,
+      };
     } else if (state.currentValue === "0") {
       state = {
         ...state,
@@ -76,14 +83,15 @@ operatorButtons.forEach(function (button) {
         ...state,
         previousValue: result,
         operator: operatorMap[this.textContent],
-        currentValue: "",
+        currentValue: String(result),
+        waitingForNewValue: true,
       };
     } else {
       state = {
         ...state,
         previousValue: state.currentValue,
         operator: operatorMap[this.textContent],
-        currentValue: "",
+        waitingForNewValue: true,
       };
     }
     updateDisplay();
@@ -118,6 +126,12 @@ decimalButton.addEventListener("click", function () {
       ...state,
       currentValue: "0.",
       justCalculated: false,
+    };
+  } else if (state.waitingForNewValue) {
+    state = {
+      ...state,
+      currentValue: "0.",
+      waitingForNewValue: false,
     };
   } else if (!state.currentValue.includes(".")) {
     state = {
