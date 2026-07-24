@@ -2,11 +2,13 @@ const display = document.getElementById("display");
 
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.querySelector(".equals");
 
 let state = {
   currentValue: "",
   previousValue: null,
   operator: null,
+  justCalculated: false,
 };
 
 const operatorMap = {
@@ -16,13 +18,35 @@ const operatorMap = {
   "×": "*",
 };
 
+const operations = {
+  "+": (a, b) => a + b,
+  "-": (a, b) => a - b,
+  "/": (a, b) => a / b,
+  "*": (a, b) => a * b,
+};
+
 function updateDisplay() {
   display.textContent = state.currentValue;
 }
 
+function calculate() {
+  const operation = operations[state.operator];
+  const prev = Number(state.previousValue);
+  const curr = Number(state.currentValue);
+  return operation(prev, curr);
+}
+
 numberButtons.forEach(function (button) {
   button.addEventListener("click", function () {
-    state = { ...state, currentValue: state.currentValue + this.textContent };
+    if (state.justCalculated) {
+      state = {
+        ...state,
+        currentValue: this.textContent,
+        justCalculated: false,
+      };
+    } else {
+      state = { ...state, currentValue: state.currentValue + this.textContent };
+    }
     updateDisplay();
   });
 });
@@ -37,4 +61,16 @@ operatorButtons.forEach(function (button) {
     };
     updateDisplay();
   });
+});
+
+equalsButton.addEventListener("click", function () {
+  const result = calculate();
+  state = {
+    ...state,
+    currentValue: result,
+    previousValue: null,
+    operator: null,
+    justCalculated: true,
+  };
+  updateDisplay();
 });
