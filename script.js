@@ -54,12 +54,22 @@ numberButtons.forEach(function (button) {
 
 operatorButtons.forEach(function (button) {
   button.addEventListener("click", function () {
-    state = {
-      ...state,
-      previousValue: state.currentValue,
-      operator: operatorMap[this.textContent],
-      currentValue: "",
-    };
+    if (state.operator && state.previousValue !== null) {
+      const result = calculate();
+      state = {
+        ...state,
+        previousValue: result,
+        operator: operatorMap[this.textContent],
+        currentValue: "",
+      };
+    } else {
+      state = {
+        ...state,
+        previousValue: state.currentValue,
+        operator: operatorMap[this.textContent],
+        currentValue: "",
+      };
+    }
     updateDisplay();
   });
 });
