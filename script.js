@@ -3,6 +3,7 @@ const display = document.getElementById("display");
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
+const clearButton = document.querySelector(".clear");
 
 let state = {
   currentValue: "",
@@ -71,6 +72,16 @@ equalsButton.addEventListener("click", function () {
     previousValue: null,
     operator: null,
     justCalculated: true,
+  };
+  updateDisplay();
+});
+
+clearButton.addEventListener("click", function () {
+  state = {
+    currentValue: "",
+    previousValue: null,
+    operator: null,
+    justCalculated: false,
   };
   updateDisplay();
 });
