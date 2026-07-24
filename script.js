@@ -127,3 +127,27 @@ decimalButton.addEventListener("click", function () {
   }
   updateDisplay();
 });
+
+document.addEventListener("keydown", function (event) {
+  const key = event.key;
+
+  if (key >= "0" && key <= "9") {
+    const button = [...numberButtons].find((btn) => btn.textContent === key);
+    if (button) button.click();
+  } else if (key === ".") {
+    decimalButton.click();
+  } else if (key === "+" || key === "-") {
+    const button = [...operatorButtons].find((btn) => btn.textContent === key);
+    if (button) button.click();
+  } else if (key === "*") {
+    const button = [...operatorButtons].find((btn) => btn.textContent === "×");
+    if (button) button.click();
+  } else if (key === "/") {
+    const button = [...operatorButtons].find((btn) => btn.textContent === "÷");
+    if (button) button.click();
+  } else if (key === "Enter" || key === "=") {
+    equalsButton.click();
+  } else if (key === "Escape" || key === "Backspace") {
+    clearButton.click();
+  }
+});
